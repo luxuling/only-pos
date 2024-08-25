@@ -5,7 +5,14 @@
 
 * {
   font-family: 'Inter', sans-serif;
-  font-optical-sizing: auto;
-  font-weight: auto;
-  font-style: normal;
+}
+
+.nuxt-icon--fill,
+.nuxt-icon--fill * {
+  fill: revert-layer !important;
+}
+
+.nuxt-icon--fill {
+  width: 24px !important;
+  height: 24px !important;
 }

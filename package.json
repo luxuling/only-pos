@@ -10,8 +10,10 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
+    "@nuxt/image": "^1.7.0",
     "clsx": "^2.1.1",
     "nuxt": "^3.13.0",
+    "nuxt-svgo": "^4.0.3",
     "tailwind-merge": "^2.5.2",
     "vue": "latest"
   },
@@ -32,6 +34,7 @@
     "prettier-plugin-tailwindcss": "^0.6.6",
     "tailwindcss": "^3.4.10",
     "typescript": "^5.5.4",
-    "typescript-eslint": "^8.2.0"
+    "typescript-eslint": "^8.2.0",
+    "vue-tsc": "^2.0.29"
   }
 }
