@@ -6,3 +6,13 @@
 * {
   font-family: 'Inter', sans-serif;
 }
+
+.nuxt-icon--fill,
+.nuxt-icon--fill * {
+  fill: revert-layer !important;
+}
+
+.nuxt-icon--fill {
+  width: 24px !important;
+  height: 24px !important;
+}
