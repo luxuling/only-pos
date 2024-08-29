@@ -39,7 +39,7 @@ const onClickHandler = () => {
       </div>
     </section>
     <section
-      class="bg-primary rounded-lg h-full flex text-white flex-col justify-center items-center px-[50px] gap-[50px]">
+      class="hidden bg-primary rounded-lg h-full md:flex text-white flex-col justify-center items-center px-[50px] gap-[50px]">
       <div>
         <h2 class="text-xl font-medium">{{ `⭐ A simple way to receive your first POS with high performance at no cost.
           Try
