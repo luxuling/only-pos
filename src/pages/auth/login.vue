@@ -1,4 +1,5 @@
 <script setup lang="ts">
+
 import GoogleIcon from '~/assets/icons/google.svg'
 const onChangeHandler = (event: Event) => {
   console.log(event)
@@ -7,6 +8,7 @@ const onChangeHandler = (event: Event) => {
 const onClickHandler = () => {
 
 }
+
 </script>
 
 <template>
@@ -21,20 +23,18 @@ const onClickHandler = () => {
           <div class="flex flex-col w-full gap-[10px]">
             <Input type="email" label="Email" placeholder="Enter your email Ex: my@gmail.com"
               :change="onChangeHandler" />
-            <Input type="number" label="WhatsApp Number" placeholder="Enter your number Ex: 089899..."
-              :change="onChangeHandler" />
             <Input type="password" label="Password" placeholder="Enter your password Ex: @mypass2312"
               :change="onChangeHandler" />
           </div>
-          <Button type="submit" class="w-full">Register</Button>
+          <Button type="submit" class="w-full">Log in</Button>
         </form>
         <AuthSeparator />
         <Button :click="onClickHandler" class="w-full">
           <GoogleIcon class="nuxt-icon" />
-          Register with google
+          Log in with google
         </Button>
         <p>
-          Already have account? <NuxtLink to="/auth/login" class="font-medium underline">Sign In</NuxtLink>
+          Don't have account? <NuxtLink to="/auth/register" class="font-medium underline">Register</NuxtLink>
         </p>
       </div>
     </section>
