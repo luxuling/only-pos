@@ -1,19 +1,10 @@
-import globals from 'globals';
-import pluginJs from '@eslint/js';
-import tseslint from 'typescript-eslint';
-import pluginVue from 'eslint-plugin-vue';
-import unusedImportPlugin from 'eslint-plugin-unused-imports';
 import simpleSortPlugin from 'eslint-plugin-simple-import-sort';
+import unusedImportPlugin from 'eslint-plugin-unused-imports';
 
-export default [
-  { files: ['**/*.{js,mjs,cjs,ts,vue}'] },
-  { languageOptions: { globals: globals.browser } },
-  pluginJs.configs.recommended,
-  ...tseslint.configs.recommended,
-  ...pluginVue.configs['flat/essential'],
+import withNuxt from './.nuxt/eslint.config.mjs';
+
+export default withNuxt([
   {
-    files: ['**/*.vue'],
-    languageOptions: { parserOptions: { parser: tseslint.parser } },
     plugins: {
       'unused-imports': unusedImportPlugin,
       'simple-import-sort': simpleSortPlugin,
@@ -72,4 +63,4 @@ export default [
       ],
     },
   },
-];
+]);
