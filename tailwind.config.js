@@ -12,6 +12,7 @@ export default {
     extend: {
       boxShadow: {
         brutalism: '5px 7px 0px 0px rgba(17, 19, 21, 1)',
+        'brutalism-disable': '5px 7px 0px 0px rgba(115, 115, 115, 1)',
       },
       colors: {
         primary: '#111315',
