@@ -1,51 +1,21 @@
 <script setup lang="ts">
-import { Eye, EyeOffIcon } from 'lucide-vue-next';
+import { CircleCheck, CircleX, Eye, EyeOffIcon } from 'lucide-vue-next';
+
+import { cn } from '@/lib';
+
+import { errors, formRegister, onChangeHandler, registerHandler, validate, visiblePassword } from './script';
 
 import GoogleIcon from '~/assets/icons/google.svg'
 
 const supabase = useSupabaseClient()
-const visiblePassword = ref<boolean>(false)
 
-interface IForm {
-  email: string;
-  whatsAppNumber?: string;
-  password: string;
-}
-
-const formRegister = ref<IForm>({
-  email: '',
-  whatsAppNumber: undefined,
-  password: ''
-})
-
-const onChangeHandler = (event: Event) => {
-  const target = event.target as HTMLInputElement
-  formRegister.value = { ...formRegister.value, [target.id]: target.value }
-}
-
-const onClickHandler = async (event: Event) => {
-  event.preventDefault()
-  console.log(formRegister.value)
-
-  const { error } = await supabase.auth.signUp({
-    email: formRegister.value.email,
-    password: formRegister.value.email,
-    options: {
-      data: {
-        whatsAppNumber: formRegister.value.whatsAppNumber
-      }
-    }
-  })
-
-  if (error) console.log(error?.message)
-}
 </script>
 
 <template>
   <main class="px-5 pt-5 pb-[50px] md:grid md:grid-cols-2 md:p-[40px] min-h-screen md:gap-[20px]">
     <section class="flex justify-center items-center h-full">
       <div class="flex flex-col items-center gap-[30px] w-full max-w-[380px]">
-        <form class="flex flex-col gap-[40px] items-start w-full" @submit="onClickHandler">
+        <form class="flex flex-col gap-[40px] items-start w-full" @submit="(event) => registerHandler(event, supabase)">
           <div>
             <h1 class="text-2xl font-semibold">Get Started</h1>
             <p>Unlock your potential. Get started today</p>
@@ -53,28 +23,41 @@ const onClickHandler = async (event: Event) => {
           <div class="flex flex-col w-full gap-[10px]">
             <Input
 id="email" type="email" :value="formRegister.email" label="Email"
-              placeholder="Enter your email Ex: my@gmail.com" :change="onChangeHandler" />
+              placeholder="Enter your email Ex: my@gmail.com" :error="errors.email" :change="onChangeHandler"
+              :blur="() => validate('email')" />
             <Input
 id="whatsAppNumber" type="number" :value="formRegister.whatsAppNumber" label="WhatsApp Number"
-              placeholder="Enter your number Ex: 089899..." :change="onChangeHandler" />
+              placeholder="Enter your number Ex: 089899..." :error="errors.whatsAppNumber" :change="onChangeHandler"
+              :blur="() => validate('whatsAppNumber')" />
             <Input
 id="password" :type="visiblePassword ? 'text' : 'password'" :value="formRegister.password"
               label="Password" placeholder="Enter your password Ex: @mypass2312" :change="onChangeHandler">
-            <button class="absolute right-2 group top-1/2 -translate-y-1/2" @click="visiblePassword = !visiblePassword">
+            <button
+type="button" class="absolute right-2 group top-1/2 -translate-y-1/2"
+              @click="visiblePassword = !visiblePassword">
               <Eye v-if="visiblePassword" class="text-neutral-500 group-hover:text-primary" />
               <EyeOffIcon v-else class="text-neutral-500 group-hover:text-primary" />
             </button>
             </Input>
           </div>
           <Button type="submit" class="w-full">Register</Button>
+          <div class="w-full grid grid-cols-2 gap-[5px]">
+            <div
+v-for="error in errors.password" :key="error.label"
+              :class="cn('flex items-center gap-[5px] text-sm', !error.isValid ? 'text-[#DF4343]' : 'text-[#43DF66]')">
+              <CircleCheck v-if="error.isValid" :size="20" />
+              <CircleX v-else :size="20" />
+              {{ error.label }}
+            </div>
+          </div>
         </form>
         <AuthSeparator />
-        <Button :click="onClickHandler" class="w-full">
+        <Button class="w-full">
           <GoogleIcon class="nuxt-icon" />
           Register with google
         </Button>
         <p>
-          Already have account? <NuxtLink to="/auth/login" class="font-medium underline">Sign In</NuxtLink>
+          Already have account? <NuxtLink to="/login" class="font-medium underline">Sign In</NuxtLink>
         </p>
       </div>
     </section>
