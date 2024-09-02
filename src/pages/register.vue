@@ -1,15 +1,18 @@
 <script setup lang="ts">
+import { Eye, EyeOffIcon } from 'lucide-vue-next';
+
 import GoogleIcon from '~/assets/icons/google.svg'
 
 const supabase = useSupabaseClient()
+const visiblePassword = ref<boolean>(false)
 
-interface IStateLogin {
+interface IForm {
   email: string;
   whatsAppNumber?: string;
   password: string;
 }
 
-const state = ref<IStateLogin>({
+const formRegister = ref<IForm>({
   email: '',
   whatsAppNumber: undefined,
   password: ''
@@ -17,19 +20,19 @@ const state = ref<IStateLogin>({
 
 const onChangeHandler = (event: Event) => {
   const target = event.target as HTMLInputElement
-  state.value = { ...state.value, [target.id]: target.value }
+  formRegister.value = { ...formRegister.value, [target.id]: target.value }
 }
 
 const onClickHandler = async (event: Event) => {
   event.preventDefault()
-  console.log(state.value)
+  console.log(formRegister.value)
 
   const { error } = await supabase.auth.signUp({
-    email: state.value.email,
-    password: state.value.email,
+    email: formRegister.value.email,
+    password: formRegister.value.email,
     options: {
       data: {
-        whatsAppNumber: state.value.whatsAppNumber
+        whatsAppNumber: formRegister.value.whatsAppNumber
       }
     }
   })
@@ -49,14 +52,19 @@ const onClickHandler = async (event: Event) => {
           </div>
           <div class="flex flex-col w-full gap-[10px]">
             <Input
-id="email" type="email" :value="state.email" label="Email"
+id="email" type="email" :value="formRegister.email" label="Email"
               placeholder="Enter your email Ex: my@gmail.com" :change="onChangeHandler" />
             <Input
-id="whatsAppNumber" type="number" :value="state.whatsAppNumber" label="WhatsApp Number"
+id="whatsAppNumber" type="number" :value="formRegister.whatsAppNumber" label="WhatsApp Number"
               placeholder="Enter your number Ex: 089899..." :change="onChangeHandler" />
             <Input
-id="password" type="password" :value="state.password" label="Password"
-              placeholder="Enter your password Ex: @mypass2312" :change="onChangeHandler" />
+id="password" :type="visiblePassword ? 'text' : 'password'" :value="formRegister.password"
+              label="Password" placeholder="Enter your password Ex: @mypass2312" :change="onChangeHandler">
+            <button class="absolute right-2 group top-1/2 -translate-y-1/2" @click="visiblePassword = !visiblePassword">
+              <Eye v-if="visiblePassword" class="text-neutral-500 group-hover:text-primary" />
+              <EyeOffIcon v-else class="text-neutral-500 group-hover:text-primary" />
+            </button>
+            </Input>
           </div>
           <Button type="submit" class="w-full">Register</Button>
         </form>
