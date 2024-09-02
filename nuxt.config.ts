@@ -22,6 +22,15 @@ export default defineNuxtConfig({
       autoprefixer: {},
     },
   },
+  supabase: {
+    redirectOptions: {
+      login: '/login',
+      callback: '/',
+      include: ['/'],
+      exclude: ['/register', '/images/*'],
+      cookieRedirect: false,
+    },
+  },
 
-  modules: ['@nuxt/image', 'nuxt-svgo'],
+  modules: ['@nuxt/image', 'nuxt-svgo', '@nuxtjs/supabase', '@nuxt/eslint'],
 });
