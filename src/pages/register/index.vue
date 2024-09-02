@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { CircleCheck, CircleX, Eye, EyeOffIcon } from 'lucide-vue-next';
+import { CircleCheck, CircleX, Eye, EyeOffIcon, LoaderCircle } from 'lucide-vue-next';
 
 import { cn } from '@/lib';
 
-import { errors, formRegister, onChangeHandler, registerHandler, validate, visiblePassword } from './script';
+import { errors, formRegister, isAllInputValid, isLoading, onChangeHandler, registerHandler, validate, visiblePassword } from './script';
 
 import GoogleIcon from '~/assets/icons/google.svg'
 
@@ -40,7 +40,10 @@ type="button" class="absolute right-2 group top-1/2 -translate-y-1/2"
             </button>
             </Input>
           </div>
-          <Button type="submit" class="w-full">Register</Button>
+          <Button type="submit" class="w-full" :disabled="!isAllInputValid">
+            <LoaderCircle v-if="isLoading" class="animate-spin" />
+            <span v-else>Register</span>
+          </Button>
           <div class="w-full grid grid-cols-2 gap-[5px]">
             <div
 v-for="error in errors.password" :key="error.label"

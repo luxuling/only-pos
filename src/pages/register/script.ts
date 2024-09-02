@@ -2,6 +2,9 @@ import type { SupabaseClient } from '@supabase/supabase-js';
 import * as yup from 'yup';
 
 export const visiblePassword = ref<boolean>(false);
+export const isAllInputValid = ref<boolean>(false);
+const passwordState = ref<boolean[]>([]);
+export const isLoading = ref<boolean>(false);
 
 type IRegisterForm = {
   email: string;
@@ -68,7 +71,7 @@ const yupMatches = async (regex: RegExp, compare: string) => {
   return await yup.string().matches(regex).isValid(compare);
 };
 
-watch(formRegister, async () => {
+watch(formRegister, async (oldValue, newValue) => {
   const isContainLowerCase = await yupMatches(
     /[a-z]/g,
     formRegister.value.password,
@@ -114,6 +117,26 @@ watch(formRegister, async () => {
       isValid: minimumLength,
     },
   ];
+
+  if (oldValue.password !== newValue.password) {
+    for (let i = 0; i < errors.password.length; i++) {
+      if (errors.password[i] !== undefined) {
+        passwordState.value[i] = errors.password[i].isValid;
+      }
+    }
+  }
+});
+
+watch(errors, () => {
+  if (
+    passwordState.value.includes(false) ||
+    errors.email.length > 0 ||
+    errors.whatsAppNumber.length > 0
+  ) {
+    isAllInputValid.value = false;
+  } else {
+    isAllInputValid.value = true;
+  }
 });
 
 export const registerHandler = async (
@@ -121,9 +144,13 @@ export const registerHandler = async (
   supabase: SupabaseClient,
 ) => {
   event.preventDefault();
+  if (!isAllInputValid) return;
+
+  isLoading.value = true;
+
   const { error } = await supabase.auth.signUp({
     email: formRegister.value.email,
-    password: formRegister.value.email,
+    password: formRegister.value.password,
     options: {
       data: {
         whatsAppNumber: formRegister.value.whatsAppNumber,
@@ -131,5 +158,9 @@ export const registerHandler = async (
     },
   });
 
-  if (error) console.log(error?.message);
+  isLoading.value = false;
+
+  if (error) return console.log(error?.message);
+
+  navigateTo('/register/success');
 };
