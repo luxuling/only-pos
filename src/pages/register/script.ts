@@ -1,6 +1,8 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
 import * as yup from 'yup';
 
+import { regexEmail } from '@/lib';
+
 export const visiblePassword = ref<boolean>(false);
 export const isAllInputValid = ref<boolean>(false);
 const passwordState = ref<boolean[]>([]);
@@ -39,9 +41,6 @@ export const onChangeHandler = (event: Event) => {
   const target = event.target as HTMLInputElement;
   formRegister.value = { ...formRegister.value, [target.id]: target.value };
 };
-
-// eslint-disable-next-line no-useless-escape
-const regexEmail = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g;
 
 const schema = yup.object().shape({
   email: yup
