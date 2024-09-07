@@ -3,7 +3,7 @@ import { Eye, EyeOffIcon, LoaderCircle } from 'lucide-vue-next'
 
 import { signInWithGoogle } from '@/services/oauth';
 
-import { errors, formLogin, isAllInputValid, isLoading, loginHandler, onChangeHandler, validate, visiblePassword } from './script'
+import { errors, formLogin, isAllInputValid, isLoading, loginHandler, onChangeHandler, visiblePassword } from './script'
 
 import GoogleIcon from '~/assets/icons/google.svg'
 
@@ -23,12 +23,11 @@ const supabase = useSupabaseClient()
           <div class="flex flex-col w-full gap-[10px]">
             <Input
 id="email" type="email" label="Email" placeholder="Enter your email Ex: my@gmail.com"
-              :value="formLogin.email" :change="onChangeHandler" :blur="() => validate('email')"
-              :error="errors.email" />
+              :value="formLogin.email" :change="onChangeHandler" :error="errors.email" autocomplete="email" />
             <Input
 id="password" :type="visiblePassword ? 'text' : 'password'" :value="formLogin.password"
               label="Password" placeholder="Enter your password Ex: @mypass2312" :change="onChangeHandler"
-              :error="errors.password" :blur="() => validate('password')">
+              :error="errors.password" autocomplete="current-password">
             <button
 type="button" class="absolute right-2 group top-1/2 -translate-y-1/2"
               @click="visiblePassword = !visiblePassword">

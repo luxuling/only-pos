@@ -40,6 +40,9 @@ export const formRegister = ref<IRegisterForm>({
 export const onChangeHandler = (event: Event) => {
   const target = event.target as HTMLInputElement;
   formRegister.value = { ...formRegister.value, [target.id]: target.value };
+  if (target.id !== 'password') {
+    validate(target.id as keyof IRegisterForm);
+  }
 };
 
 const schema = yup.object().shape({
@@ -71,6 +74,10 @@ const yupMatches = async (regex: RegExp, compare: string) => {
 };
 
 watch(formRegister, async (oldValue, newValue) => {
+  if (formRegister.value.password.length === 0) {
+    return;
+  }
+
   const isContainLowerCase = await yupMatches(
     /[a-z]/g,
     formRegister.value.password,
@@ -126,11 +133,14 @@ watch(formRegister, async (oldValue, newValue) => {
   }
 });
 
-watch(errors, () => {
+watch([errors, formRegister], () => {
   if (
     passwordState.value.includes(false) ||
     errors.email.length > 0 ||
-    errors.whatsAppNumber.length > 0
+    errors.whatsAppNumber.length > 0 ||
+    formRegister.value.email.length === 0 ||
+    formRegister.value.whatsAppNumber?.length === 0 ||
+    formRegister.value.password.length === 0
   ) {
     isAllInputValid.value = false;
   } else {

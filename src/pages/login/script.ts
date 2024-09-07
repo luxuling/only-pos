@@ -1,6 +1,7 @@
-import { regexEmail } from '@/lib';
 import type { SupabaseClient } from '@supabase/supabase-js';
 import * as yup from 'yup';
+
+import { regexEmail } from '@/lib';
 
 export const visiblePassword = ref<boolean>(false);
 export const isAllInputValid = ref<boolean>(false);
@@ -45,8 +46,13 @@ export const validate = (field: keyof ILoginForm) => {
     });
 };
 
-watch(errors, () => {
-  if (errors.email.length > 0 || errors.password.length > 0) {
+watch([formLogin, errors], () => {
+  if (
+    errors.email.length > 0 ||
+    errors.password.length > 0 ||
+    formLogin.value.password.length === 0 ||
+    formLogin.value.email.length === 0
+  ) {
     isAllInputValid.value = false;
   } else {
     isAllInputValid.value = true;
@@ -56,6 +62,7 @@ watch(errors, () => {
 export const onChangeHandler = (event: Event) => {
   const target = event.target as HTMLInputElement;
   formLogin.value = { ...formLogin.value, [target.id]: target.value };
+  validate(target.id as keyof ILoginForm);
 };
 
 export const loginHandler = async (event: Event, supabase: SupabaseClient) => {
